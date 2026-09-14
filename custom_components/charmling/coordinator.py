@@ -12,14 +12,14 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.util import dt as dt_util
 
 from .api import CharmlingApi, CharmlingAuthError, CharmlingError
-from .const import CONF_VERSION, DOMAIN, SIGNAL_UPDATE, STALE_AFTER
+from .const import CONF_MAC_NAME, CONF_VERSION, DOMAIN, SIGNAL_UPDATE, STALE_AFTER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class CharmlingData:
         self.last_seen: datetime | None = None
         self.available = False
         self.last_event: tuple[str, dict[str, Any]] | None = None
-        self._unsub_timer = None
+        self._unsub_timer: CALLBACK_TYPE | None = None
 
     @property
     def signal(self) -> str:
@@ -79,6 +79,17 @@ class CharmlingData:
         self.hass.config_entries.async_update_entry(self.entry, data={**self.entry.data, CONF_VERSION: version})
         if device_id := self.device_id:
             dr.async_get(self.hass).async_update_device(device_id, sw_version=version)
+
+    @callback
+    def set_name(self, name: str) -> None:
+        """The Mac was renamed: the device and the entry follow, unless the person named the device themselves."""
+        if not name or name == self.name:
+            return
+        self.name = name
+        self.hass.config_entries.async_update_entry(self.entry, title=f"Charmling on {name}", data={**self.entry.data, CONF_MAC_NAME: name})
+        # the device's own name follows; a name the person gave it in HA (name_by_user) still wins on screen
+        if device_id := self.device_id:
+            dr.async_get(self.hass).async_update_device(device_id, name=name)
 
     @callback
     def async_stop(self) -> None:

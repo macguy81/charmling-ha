@@ -45,7 +45,8 @@
       "invalid_code": "That code was not accepted. Open the pane on the Mac again; it shows a fresh one.",
       "cannot_connect": "Could not reach Charmling on the Mac. Is the app running, and is the Mac on this network?",
       "different_mac": "That address belongs to a different Mac. Add it as a new device instead.",
-      "no_url": "Home Assistant does not know its own address on this network. Set the internal URL in Settings → System → Network, then try again."
+      "no_url": "Home Assistant does not know its own address on this network. Set the internal URL in Settings → System → Network, then try again.",
+      "invalid_host": "That does not look like an address. The Mac's IP address or Bonjour name, without http://."
     },
     "abort": {
       "not_charmling": "That is not a Charmling.",
@@ -226,8 +227,7 @@
               "wake": "Wake",
               "delivered": "Delivered",
               "back_at_desk": "Back at the desk",
-              "left_desk": "Left the desk",
-              "cord_pulled": "Cord pulled"
+              "left_desk": "Left the desk"
             }
           }
         }
@@ -392,7 +392,6 @@
       "stretch": "{entity_name} nudged a stretch",
       "ritual": "the charm on {entity_name} did its ritual",
       "bead": "a bead was hung on {entity_name}",
-      "cord_pulled": "the cord on {entity_name} was pulled",
       "bark": "the dog on {entity_name} barked",
       "woof": "the dog on {entity_name} woofed",
       "trick": "the dog on {entity_name} did the trick",

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable
+from typing import Any
+
 from homeassistant.core import callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -42,10 +45,10 @@ class CharmlingEntity(Entity):
         return self.data.available
 
     @property
-    def value(self):
+    def value(self) -> Any:
         """The Mac's latest value for this key, or None when it has not sent one."""
         return self.data.states.get(self.entity_description.key)
 
-    async def ask(self, what: str, coro) -> None:
+    async def ask(self, what: str, coro: Awaitable[object]) -> None:
         """A request to the Mac, with a re-pair started if it refuses the secret."""
         await async_ask(self.data, what, coro)

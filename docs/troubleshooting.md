@@ -54,6 +54,12 @@ dropped, or Home Assistant's address changed.
 - HTTPS with a self-signed certificate: the Mac refuses it. Set an
   `http://` internal URL in Settings → System → Network; the webhook URL
   follows the internal URL.
+- Home Assistant in Docker (not host networking) without an internal URL
+  hands out its container address (172.x.x.x), which nothing outside can
+  reach. Charmling notices a bare IP that differs from the address the
+  pairing came from and uses the real one, so this usually just works; if
+  the pane still says "cannot reach", set the internal URL to
+  `http://<the host's LAN IP>:8123` and pair again.
 - Press **Test on air (5 s)** in the pane and watch `on_air`: if it flips,
   the path is fine and the Mac was simply asleep.
 

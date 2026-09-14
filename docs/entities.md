@@ -2,8 +2,9 @@
 
 One device per Mac, named after the Mac. Entity ids below are for a Mac
 called "Abi's MacBook Pro" (`abi_s_macbook_pro`); yours follow your Mac's
-name. Rename the Mac and the entity ids stay: the device is known by a
-random id the app made once, not by the name.
+name. Rename the Mac and the device follows (a name you gave it in Home
+Assistant still wins on screen) while the entity ids stay: the device is
+known by a random id the app made once, not by the name.
 
 Every value is pushed by the Mac the second it changes. Nothing is polled.
 The Mac re-sends everything every five minutes and on every wake, so a
@@ -44,9 +45,9 @@ Moments: `back_at_desk` and `left_desk` fire when at-the-desk flips (see [events
 
 | Entity | Type | Values | On the Mac |
 |---|---|---|---|
-| `binary_sensor…_on_air` | running | on / off | some process is recording from a microphone. On macOS 14.2 and later this is the same fact the orange dot in the menu bar shows (CoreAudio's per-process `IsRunningInput`); before that, any input-only audio device running. A muted Zoom keeps recording, so a call stays on air while muted, which is the right reading for a lamp. Three-second hold on the way off so a reconnect does not blink. No permission is needed; no audio is ever read. |
+| `binary_sensor…_on_air` | — | on / off | some process is recording from a microphone. On macOS 14.2 and later this is the same fact the orange dot in the menu bar shows (CoreAudio's per-process `IsRunningInput`); before that, any input-only audio device running. A muted Zoom keeps recording, so a call stays on air while muted, which is the right reading for a lamp. Three-second hold on the way off so a reconnect does not blink. No permission is needed; no audio is ever read. |
 | `binary_sensor…_in_a_call` | — | on / off | on air **and** the process recording is a call app (Zoom, Teams, FaceTime, Webex, Meet, a Slack huddle). A voice memo or dictation is on air but not in a call. On macOS before 14.2, which cannot say which process records, this is "on air while a call app is in front". Only the bundle id is compared; nothing about the process is sent. |
-| `binary_sensor…_camera` | running | on / off | CoreMediaIO's `DeviceIsRunningSomewhere` on every camera: some app has a camera open. No frames are read. |
+| `binary_sensor…_camera` | — | on / off | CoreMediaIO's `DeviceIsRunningSomewhere` on every camera: some app has a camera open. No frames are read. |
 | `binary_sensor…_call_app_in_front` | — | on / off | the front app's bundle id is one of: Zoom, Teams, FaceTime, Webex, Google Meet, a Slack huddle. Only the id is looked at, never the window. |
 | `binary_sensor…_presenting` | — | on / off | Keynote or PowerPoint is the front app, or a call app is in front full-screen |
 
@@ -95,7 +96,7 @@ Moments: `focus_started` (with `minutes`), `focus_ended` (stopped early), `break
 | `sensor…_notification_banners_10_min` | count | macOS notification banners seen in the last ten minutes | the dog's habituation window; a count of banners on screen, never their content |
 | `sensor…_on_the_shared_cord` | count | other Macs on the shared cord | |
 
-Moments: `ritual` (with `charm`), `bead`, `cord_pulled`.
+Moments: `ritual` (with `charm`), `bead`.
 
 ## The dog
 

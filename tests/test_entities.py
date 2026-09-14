@@ -12,7 +12,7 @@ from .conftest import P
 async def test_binary_sensors(hass: HomeAssistant, paired, push) -> None:
     await push({"type": "state", "states": {"on_air": True, "screen_locked": True, "focus": "yes", "wander": "off"}})
     assert hass.states.get(f"binary_sensor.{P}_on_air").state == "on"
-    assert hass.states.get(f"binary_sensor.{P}_on_air").attributes["device_class"] == "running"
+    assert "device_class" not in hass.states.get(f"binary_sensor.{P}_on_air").attributes   # On/Off, not Running
     # lock class: "on" means unlocked, so a locked screen reads off
     assert hass.states.get(f"binary_sensor.{P}_screen").state == "off"
     assert hass.states.get(f"binary_sensor.{P}_screen").attributes["device_class"] == "lock"

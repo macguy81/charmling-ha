@@ -83,7 +83,7 @@ else. Enums (`work_kind`, `dog`, `focus_mode`, `meeting_density`,
 unknown rather than breaking anything.
 
 **"The integration broke on the next HA release."** hassfest, the HACS
-check and a 51-test suite run on every push, against the current Home
+check and a 59-test suite run on every push, against the current Home
 Assistant.
 
 ## What it deliberately does not do

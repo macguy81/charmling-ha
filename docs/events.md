@@ -57,7 +57,6 @@ triggers:
 | `stretch` | the stretch-break nudge (every 50 minutes at the desk) | |
 | `ritual` | the charm did its ritual: the Maneki beckoned, the fox rang its bell | `charm` |
 | `bead` | something was hung on the cord | (never the label) |
-| `cord_pulled` | the cord was pulled | |
 | `bark` | a full bark (a delivery, or a house emergency) | |
 | `woof` | one woof (a delivery) | |
 | `trick` | he did the trick | `trick` |

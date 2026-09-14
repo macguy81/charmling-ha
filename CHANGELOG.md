@@ -18,3 +18,6 @@ The first release.
 - `display_asleep`, `do_not_disturb` and `focus_mode` (the Apple Focus kind)
 - Every moment as a device trigger in the automation editor
 - Icon translations; `dog` and `leash` as enums with translated states
+- The address field takes what people paste (`http://…:41417/`, `host:port`, an IPv6 literal)
+- A Docker-internal webhook address is corrected to the one the pairing came from
+- The device follows the Mac's name; strict typing (mypy) clean

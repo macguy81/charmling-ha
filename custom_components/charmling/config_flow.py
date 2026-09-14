@@ -12,6 +12,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Mapping
 from typing import Any
+from urllib.parse import urlsplit
 
 import voluptuous as vol
 from homeassistant.components import webhook
@@ -88,11 +89,15 @@ class CharmlingConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Typed by hand, for a Mac that Bonjour could not see."""
+        errors: dict[str, str] = {}
         if user_input is not None:
-            self._host = user_input[CONF_HOST].strip()
-            self._port = int(user_input.get(CONF_PORT, DEFAULT_PORT))
-            return await self.async_step_pair()
-        return self.async_show_form(step_id="user", data_schema=HOST_SCHEMA)
+            try:
+                self._host, self._port = _host_and_port(user_input[CONF_HOST], user_input.get(CONF_PORT, DEFAULT_PORT))
+            except ValueError:
+                errors["base"] = "invalid_host"
+            else:
+                return await self.async_step_pair()
+        return self.async_show_form(step_id="user", data_schema=HOST_SCHEMA, errors=errors)
 
     # ---------------------------------------------------------------- reauth
 
@@ -127,8 +132,16 @@ class CharmlingConfigFlow(ConfigFlow, domain=DOMAIN):
         if self._bounce:
             errors["base"], self._bounce = self._bounce, None
         elif user_input is not None:
-            self._host = user_input[CONF_HOST].strip()
-            self._port = int(user_input.get(CONF_PORT, DEFAULT_PORT))
+            try:
+                self._host, self._port = _host_and_port(user_input[CONF_HOST], user_input.get(CONF_PORT, DEFAULT_PORT))
+            except ValueError:
+                errors["base"] = "invalid_host"
+                return self.async_show_form(
+                    step_id="reconfigure",
+                    data_schema=self.add_suggested_values_to_schema(HOST_SCHEMA, user_input),
+                    errors=errors,
+                    description_placeholders={"name": entry.data.get(CONF_MAC_NAME, "")},
+                )
             self._node = entry.data[CONF_NODE]
             self._name = entry.data.get(CONF_MAC_NAME, self._name)
             api = CharmlingApi(async_get_clientsession(self.hass), self._host, self._port, entry.data[CONF_SECRET])
@@ -191,7 +204,8 @@ class CharmlingConfigFlow(ConfigFlow, domain=DOMAIN):
         # different Mac at that address refuses and changes nothing
         expect = existing.data[CONF_NODE] if existing else self._node
         try:
-            reply = await api.pair(code, webhook_url, webhook_id, expect_id=expect)
+            api_port = hass_api.port if (hass_api := self.hass.config.api) else None
+            reply = await api.pair(code, webhook_url, webhook_id, expect_id=expect, api_port=api_port)
         except CharmlingAuthError:
             return "invalid_code"
         except CharmlingConflictError:
@@ -229,6 +243,22 @@ class CharmlingConfigFlow(ConfigFlow, domain=DOMAIN):
             title=f"Charmling on {name}",
             data={**updates, CONF_NODE: node, CONF_WEBHOOK_ID: webhook_id},
         )
+
+
+def _host_and_port(raw: str, port: Any) -> tuple[str, int]:
+    """What people paste: "192.168.1.5", "abis-macbook-pro.local", "http://192.168.1.5:41417/", "[fe80::1]:41417"."""
+    text = str(raw).strip()
+    if "://" in text:
+        text = text.split("://", 1)[1]
+    text = text.split("/", 1)[0]
+    parsed = urlsplit(f"//{text}")
+    host = (parsed.hostname or "").strip()
+    if not host:
+        raise ValueError("no host")
+    chosen = parsed.port or int(port or DEFAULT_PORT)
+    if not 1 <= chosen <= 65535:
+        raise ValueError("bad port")
+    return host, chosen
 
 
 def _webhook_url(hass: HomeAssistant, webhook_id: str) -> str:

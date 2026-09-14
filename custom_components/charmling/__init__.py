@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import hmac
 import logging
+from collections.abc import Awaitable, Callable
 from http import HTTPStatus
 from typing import Any
 
@@ -142,7 +143,7 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
 # ---------------------------------------------------------------- webhook
 
 
-def _make_webhook_handler(entry: CharmlingConfigEntry):
+def _make_webhook_handler(entry: CharmlingConfigEntry) -> Callable[[HomeAssistant, str, Request], Awaitable[Response]]:
     async def handle(hass: HomeAssistant, webhook_id: str, request: Request) -> Response:
         given = request.headers.get(SECRET_HEADER, "")
         if not hmac.compare_digest(given.encode(), entry.data[CONF_SECRET].encode()):
@@ -202,6 +203,7 @@ def _handle_message(hass: HomeAssistant, entry: CharmlingConfigEntry, body: dict
         data.mark_seen()
     elif kind == "hello":
         data.set_version(str(body.get("version", ""))[:32])
+        data.set_name(str(body.get("name", ""))[:80])
         data.apply(_clean_states(body.get("states")))
         data.mark_seen()
     elif kind == "bye":
@@ -244,7 +246,7 @@ def _entries_for_call(hass: HomeAssistant, call: ServiceCall) -> list[CharmlingC
     return out
 
 
-async def _ask_all(hass: HomeAssistant, call: ServiceCall, what: str, make) -> None:
+async def _ask_all(hass: HomeAssistant, call: ServiceCall, what: str, make: Callable[[CharmlingApi], Awaitable[object]]) -> None:
     """Every targeted Mac is asked, even if an earlier one is asleep; then one error for all that failed."""
     entries = _entries_for_call(hass, call)
     results = await asyncio.gather(

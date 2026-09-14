@@ -235,7 +235,7 @@ your network.
 
 hassfest (Home Assistant's own integration validator) and ruff pass in CI
 on every push, along with a pytest suite (`tests/`, on
-pytest-homeassistant-custom-component, 51 tests) covering every flow, the webhook,
+pytest-homeassistant-custom-component, 59 tests) covering every flow, the webhook,
 every platform, the services and their failure modes. `tests/live` holds
 a second suite that drives a real Home Assistant with two pretend Macs
 through pairing, malformed input, two devices, reauth, reconfigure,

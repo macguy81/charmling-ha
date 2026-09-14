@@ -55,6 +55,34 @@ async def test_user_flow(hass: HomeAssistant, aioclient_mock) -> None:
     assert "expect_id" not in sent          # a hand-typed address: we do not know who is there
 
 
+@pytest.mark.parametrize(
+    ("typed", "port", "host", "want_port"),
+    [
+        ("192.0.2.10", 41417, "192.0.2.10", 41417),
+        ("http://192.0.2.10:41417/", 41417, "192.0.2.10", 41417),
+        ("192.0.2.10:41500", 41417, "192.0.2.10", 41500),
+        ("abis-macbook-pro.local", 41417, "abis-macbook-pro.local", 41417),
+        ("[fe80::1]:41417", 41417, "fe80::1", 41417),
+        (" HTTPS://Abis-MacBook-Pro.local ", 41417, "abis-macbook-pro.local", 41417),
+    ],
+)
+async def test_user_flow_takes_what_people_paste(hass: HomeAssistant, aioclient_mock, typed, port, host, want_port) -> None:
+    aioclient_mock.post(f"http://{'[' + host + ']' if ':' in host else host}:{want_port}/pair", json={"id": NODE, "name": NAME, "secret": "s", "version": "1"})
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER}, data={CONF_HOST: typed, CONF_PORT: port})
+    assert result["step_id"] == "pair", result
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"code": "123456"})
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["data"][CONF_HOST] == host
+    assert result["data"][CONF_PORT] == want_port
+    assert aioclient_mock.mock_calls[-1][2]["api_port"] == 8123
+
+
+async def test_user_flow_rejects_nonsense(hass: HomeAssistant) -> None:
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER}, data={CONF_HOST: "http://", CONF_PORT: 41417})
+    assert result["step_id"] == "user"
+    assert result["errors"] == {"base": "invalid_host"}
+
+
 async def test_zeroconf_flow(hass: HomeAssistant, aioclient_mock) -> None:
     pair_ok(aioclient_mock)
     result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_ZEROCONF}, data=DISCOVERY)

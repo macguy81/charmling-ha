@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -11,6 +13,7 @@ from homeassistant.components.sensor import (
 from homeassistant.const import EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import StateType
 
 from . import CharmlingConfigEntry
 from .entity import CharmlingEntity
@@ -61,7 +64,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: CharmlingConfigEntry, as
 
 class CharmlingSensor(CharmlingEntity, SensorEntity):
     @property
-    def native_value(self):
+    def native_value(self) -> StateType | datetime:
         key = self.entity_description.key
         if key == "last_seen":
             return self.data.last_seen

@@ -40,7 +40,7 @@ Who is here. No secret: it is what the Bonjour record says anyway.
 
 ```json
 {"code": "482913", "webhook_url": "http://homeassistant.local:8123/api/webhook/<id>",
- "webhook_id": "<id>", "expect_id": "3f1c…"}
+ "webhook_id": "<id>", "expect_id": "3f1c…", "api_port": 8123}
 ```
 
 `code` is the six digits Charmling's pane shows, made when the pane opens,
@@ -60,6 +60,13 @@ Reply, **200**:
 digit was wrong). **400** without a `webhook_url`. Pairing replaces any
 earlier pairing: a Mac pairs with one Home Assistant at a time; the
 previous one starts getting 401s and offers a re-pair.
+
+`api_port` is the port Home Assistant itself listens on. When the URL's
+host is a bare IPv4 address that differs from the address the pairing
+request came from, on plain http, on that port, the Mac keeps the address
+it can demonstrably reach (the request's) with the URL's path: this is
+Home Assistant in Docker naming its container address. Hostnames, HTTPS
+and other ports (a reverse proxy) are left exactly as given.
 
 The Mac stores the webhook URL and the secret in its Keychain (this
 device only), restarts its bridge, and within a second posts a `hello`.
@@ -140,11 +147,12 @@ characters, strings over 200 characters, and any message with more than
 ### `hello`
 
 ```json
-{"type": "hello", "version": "1.9", "states": { …every key… }}
+{"type": "hello", "version": "1.9", "name": "Abi's MacBook Pro", "states": { …every key… }}
 ```
 
 On pairing, on every wake from sleep, and after Home Assistant was
-unreachable. The version updates the device page.
+unreachable. The version updates the device page; the name renames the
+device if the Mac was renamed.
 
 ### `event`
 

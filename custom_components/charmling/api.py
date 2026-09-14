@@ -73,15 +73,21 @@ class CharmlingApi:
         """Who is at this address: id, name, version, paired. No secret needed; it is what Bonjour says anyway."""
         return await self._request("GET", "/id")
 
-    async def pair(self, code: str, webhook_url: str, webhook_id: str, expect_id: str | None = None) -> dict[str, Any]:
+    async def pair(
+        self, code: str, webhook_url: str, webhook_id: str, expect_id: str | None = None, api_port: int | None = None
+    ) -> dict[str, Any]:
         """Exchange the six-digit code shown in Charmling for the secret.
 
         With expect_id, the Mac refuses (and changes nothing) if it is not that Mac,
         so a re-pair aimed at the wrong address cannot hijack another Mac's pairing.
         """
-        body = {"code": code, "webhook_url": webhook_url, "webhook_id": webhook_id}
+        body: dict[str, Any] = {"code": code, "webhook_url": webhook_url, "webhook_id": webhook_id}
         if expect_id:
             body["expect_id"] = expect_id
+        if api_port:
+            # lets the Mac notice a webhook URL that names an address it cannot reach
+            # (Home Assistant in Docker without a set internal URL) and use the one the pairing came from
+            body["api_port"] = api_port
         return await self._request("POST", "/pair", body)
 
     async def state(self) -> dict[str, Any]:

@@ -16,8 +16,9 @@ from .entity import CharmlingEntity
 PARALLEL_UPDATES = 0
 
 DESCRIPTIONS: tuple[BinarySensorEntityDescription, ...] = (
-    BinarySensorEntityDescription(key="on_air", translation_key="on_air", device_class=BinarySensorDeviceClass.RUNNING),
-    BinarySensorEntityDescription(key="camera", translation_key="camera", device_class=BinarySensorDeviceClass.RUNNING),
+    # no device class on purpose: "On air: On" reads better than "Running"
+    BinarySensorEntityDescription(key="on_air", translation_key="on_air"),
+    BinarySensorEntityDescription(key="camera", translation_key="camera"),
     BinarySensorEntityDescription(key="in_call", translation_key="in_call"),
     BinarySensorEntityDescription(key="in_call_app", translation_key="in_call_app"),
     BinarySensorEntityDescription(key="presenting", translation_key="presenting"),

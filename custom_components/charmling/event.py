@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from homeassistant.components.event import EventEntity, EventEntityDescription
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import CharmlingConfigEntry
 from .const import EVENT_TYPES
+from .coordinator import CharmlingData
 from .entity import CharmlingEntity
 
 PARALLEL_UPDATES = 0
@@ -20,9 +23,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: CharmlingConfigEntry, as
 
 
 class CharmlingEvent(CharmlingEntity, EventEntity):
-    def __init__(self, data) -> None:
+    def __init__(self, data: CharmlingData) -> None:
         super().__init__(data, DESCRIPTION)
-        self._seen = None
+        self._seen: tuple[str, dict[str, Any]] | None = None
 
     @callback
     def _pushed(self) -> None:

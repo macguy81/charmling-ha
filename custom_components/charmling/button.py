@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.core import HomeAssistant
@@ -17,7 +18,7 @@ PARALLEL_UPDATES = 0
 @dataclass(frozen=True, kw_only=True)
 class CharmlingButtonDescription(ButtonEntityDescription):
     action: str
-    extra: dict | None = None
+    extra: dict[str, Any] | None = None
 
 
 DESCRIPTIONS: tuple[CharmlingButtonDescription, ...] = (

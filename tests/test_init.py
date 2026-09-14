@@ -114,6 +114,22 @@ async def test_bye_hello_and_silence(hass: HomeAssistant, paired, push, freezer)
     assert hass.states.get(f"binary_sensor.{P}_on_air").state == "on"
 
 
+async def test_the_device_follows_the_macs_name(hass: HomeAssistant, paired, push) -> None:
+    await push({"type": "hello", "name": "Abi's Studio", "states": {}})
+    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, NODE)})
+    assert device.name == "Abi's Studio"
+    assert paired.title == "Charmling on Abi's Studio"
+    assert paired.data["mac_name"] == "Abi's Studio"
+    # a name the person gave the device in HA still wins on screen
+    dr.async_get(hass).async_update_device(device.id, name_by_user="Desk Mac")
+    await push({"type": "hello", "name": "Abi's Other Studio", "states": {}})
+    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, NODE)})
+    assert device.name_by_user == "Desk Mac"
+    assert device.name == "Abi's Other Studio"
+    # entity ids do not move with the name
+    assert hass.states.get(f"binary_sensor.{P}_on_air") is not None
+
+
 async def test_seed_does_not_clobber_a_push_that_landed_first(hass: HomeAssistant, paired) -> None:
     """A push that arrives while /state is in flight is newer than the snapshot: the seed must not overwrite it."""
     data = paired.runtime_data

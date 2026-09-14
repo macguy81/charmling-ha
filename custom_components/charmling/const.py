@@ -26,7 +26,7 @@ EVENT_TYPES = [
     "focus_started", "focus_ended", "break", "stretch",
     "ritual", "bead",
     "bark", "woof", "trick", "nap", "wake", "delivered",
-    "back_at_desk", "left_desk", "cord_pulled",
+    "back_at_desk", "left_desk",
 ]
 
 CATEGORIES = ["arrival", "alert", "done", "ambient", "emergency"]
