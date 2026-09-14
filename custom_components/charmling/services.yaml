@@ -1,0 +1,81 @@
+say:
+  fields:
+    device_id:
+      required: false
+      selector:
+        device:
+          integration: charmling
+    message:
+      required: true
+      example: "🔔 someone at the door"
+      selector:
+        text:
+    category:
+      required: false
+      default: alert
+      selector:
+        select:
+          translation_key: category
+          options:
+            - arrival
+            - alert
+            - done
+            - ambient
+            - emergency
+    sound:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+water:
+  fields:
+    device_id:
+      required: false
+      selector:
+        device:
+          integration: charmling
+    plant:
+      required: true
+      selector:
+        select:
+          translation_key: plant
+          options:
+            - bonsai
+            - dragon
+
+do:
+  fields:
+    device_id:
+      required: false
+      selector:
+        device:
+          integration: charmling
+    action:
+      required: true
+      selector:
+        select:
+          translation_key: action
+          options:
+            - call
+            - trick
+            - speak
+            - pat
+            - hush
+            - unhush
+            - mute
+            - unmute
+            - focus
+            - stop_focus
+            - unclip
+            - clip
+            - nap
+            - wake
+    minutes:
+      required: false
+      example: 25
+      selector:
+        number:
+          min: 1
+          max: 180
+          unit_of_measurement: min

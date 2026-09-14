@@ -1,0 +1,340 @@
+{
+  "config": {
+    "flow_title": "Charmling on {name}",
+    "step": {
+      "user": {
+        "title": "Find your Mac",
+        "description": "Charmling is usually found on its own. If it was not, type the Mac's address. The port is shown in Charmling's Home Assistant pane.",
+        "data": {
+          "host": "Address",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "The Mac's IP address or Bonjour name (abis-macbook-pro.local).",
+          "port": "Charmling's pane shows it; 41417 unless that port was taken."
+        }
+      },
+      "pair": {
+        "title": "Pair with Charmling on {name}",
+        "description": "On the Mac, open Charmling's menu → 🏠 Home Assistant… and type the six digits it shows. ({host})",
+        "data": {
+          "code": "Pairing code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pair again with Charmling on {name}",
+        "description": "Charmling on the Mac ({host}) no longer accepts this Home Assistant's pairing — it was unpaired there, or the app was reinstalled. Open Charmling's menu → 🏠 Home Assistant… and type the six digits it shows.",
+        "data": {
+          "code": "Pairing code"
+        }
+      },
+      "reconfigure": {
+        "title": "Where is {name} now?",
+        "description": "The Mac's new address. The existing pairing is kept if the Mac still accepts it; otherwise you will be asked for a code.",
+        "data": {
+          "host": "Address",
+          "port": "Port"
+        },
+        "data_description": {
+          "host": "The Mac's IP address or Bonjour name.",
+          "port": "Charmling's pane shows it."
+        }
+      }
+    },
+    "error": {
+      "invalid_code": "That code was not accepted. Open the pane on the Mac again; it shows a fresh one.",
+      "cannot_connect": "Could not reach Charmling on the Mac. Is the app running, and is the Mac on this network?",
+      "different_mac": "That address belongs to a different Mac. Add it as a new device instead."
+    },
+    "abort": {
+      "not_charmling": "That is not a Charmling.",
+      "already_configured": "This Mac is already paired.",
+      "already_in_progress": "This Mac is already being paired.",
+      "reauth_successful": "Paired again.",
+      "reconfigure_successful": "The Mac's address was updated."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "on_air": {
+        "name": "On air"
+      },
+      "camera": {
+        "name": "Camera"
+      },
+      "in_call_app": {
+        "name": "Call app in front"
+      },
+      "presenting": {
+        "name": "Presenting"
+      },
+      "at_desk": {
+        "name": "At the desk"
+      },
+      "screen_locked": {
+        "name": "Screen"
+      },
+      "focus": {
+        "name": "Focus session"
+      },
+      "screen_full": {
+        "name": "Full screen"
+      },
+      "wander": {
+        "name": "Wander mode"
+      },
+      "pet_out": {
+        "name": "Pet out"
+      }
+    },
+    "sensor": {
+      "idle_seconds": {
+        "name": "Idle"
+      },
+      "away_minutes": {
+        "name": "Away"
+      },
+      "focus_remaining": {
+        "name": "Focus remaining"
+      },
+      "work_kind": {
+        "name": "Work kind",
+        "state": {
+          "coding": "Coding",
+          "writing": "Writing",
+          "design": "Design",
+          "reading": "Reading",
+          "browsing": "Browsing",
+          "chat": "Chat",
+          "mail": "Mail",
+          "meeting": "Meeting",
+          "media": "Media",
+          "spreadsheets": "Spreadsheets",
+          "other": "Other",
+          "idle": "Idle"
+        }
+      },
+      "front_app": {
+        "name": "App in front"
+      },
+      "next_meeting_minutes": {
+        "name": "Next meeting in"
+      },
+      "meeting_density": {
+        "name": "Meeting density",
+        "state": {
+          "light": "Light",
+          "normal": "Normal",
+          "heavy": "Heavy",
+          "unknown": "Unknown"
+        }
+      },
+      "charm": {
+        "name": "Charm"
+      },
+      "beads": {
+        "name": "Beads waiting"
+      },
+      "basket": {
+        "name": "Basket"
+      },
+      "banners_10min": {
+        "name": "Notification banners (10 min)"
+      },
+      "cord_friends": {
+        "name": "On the shared cord"
+      },
+      "dog": {
+        "name": "Dog"
+      },
+      "dog_name": {
+        "name": "Dog's name"
+      },
+      "leash": {
+        "name": "Leash"
+      },
+      "score": {
+        "name": "Live score"
+      },
+      "last_seen": {
+        "name": "Last seen"
+      }
+    },
+    "event": {
+      "moment": {
+        "name": "Moment",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "call_started": "Call started",
+              "call_ended": "Call ended",
+              "focus_started": "Focus started",
+              "focus_ended": "Focus ended",
+              "break": "Break",
+              "stretch": "Stretch",
+              "ritual": "Ritual",
+              "bead": "Bead",
+              "bark": "Bark",
+              "woof": "Woof",
+              "trick": "Trick",
+              "nap": "Nap",
+              "wake": "Wake",
+              "delivered": "Delivered",
+              "back_at_desk": "Back at the desk",
+              "left_desk": "Left the desk",
+              "cord_pulled": "Cord pulled"
+            }
+          }
+        }
+      }
+    },
+    "button": {
+      "call": {
+        "name": "Call the dog"
+      },
+      "trick": {
+        "name": "Do the trick"
+      },
+      "speak": {
+        "name": "Speak"
+      },
+      "pat": {
+        "name": "Pat"
+      },
+      "focus_25": {
+        "name": "Focus 25 minutes"
+      },
+      "stop_focus": {
+        "name": "Stop focus"
+      },
+      "nap": {
+        "name": "Nap"
+      },
+      "wake": {
+        "name": "Wake"
+      }
+    },
+    "switch": {
+      "hushed": {
+        "name": "Hushed"
+      },
+      "muted": {
+        "name": "Bark muted"
+      }
+    }
+  },
+  "selector": {
+    "category": {
+      "options": {
+        "arrival": "Arrival — the greeting",
+        "alert": "Alert — delivered in person",
+        "done": "Done — a flick and a bead",
+        "ambient": "Ambient — a bead, nothing else",
+        "emergency": "Emergency — the bark, hush or no hush"
+      }
+    },
+    "plant": {
+      "options": {
+        "bonsai": "Bonsai",
+        "dragon": "Dragon"
+      }
+    },
+    "action": {
+      "options": {
+        "call": "Call the dog over",
+        "trick": "Do the trick",
+        "speak": "Speak (one woof)",
+        "pat": "Pat",
+        "hush": "Hush",
+        "unhush": "Unhush",
+        "mute": "Mute the bark",
+        "unmute": "Unmute the bark",
+        "focus": "Start a focus session",
+        "stop_focus": "Stop the focus session",
+        "unclip": "Unclip the leash",
+        "clip": "Clip the leash back on",
+        "nap": "Send to nap",
+        "wake": "Wake up"
+      }
+    }
+  },
+  "services": {
+    "say": {
+      "name": "Say",
+      "description": "Have whatever is on the cord say a line, its own way: the charm's ritual and the line, or the dog delivering it in person.",
+      "fields": {
+        "device_id": {
+          "name": "Mac",
+          "description": "Which Mac. Optional when only one is paired."
+        },
+        "message": {
+          "name": "Message",
+          "description": "The line, shown above the charm or the dog."
+        },
+        "category": {
+          "name": "Category",
+          "description": "How it is said: arrival, alert, done, ambient, or emergency."
+        },
+        "sound": {
+          "name": "Sound",
+          "description": "Off to keep it silent."
+        }
+      }
+    },
+    "water": {
+      "name": "Water",
+      "description": "Tend the Garden the way the menu does, once per day; confetti if it grew. For a real plant's moisture sensor.",
+      "fields": {
+        "device_id": {
+          "name": "Mac",
+          "description": "Which Mac. Optional when only one is paired."
+        },
+        "plant": {
+          "name": "Plant",
+          "description": "Bonsai or dragon."
+        }
+      }
+    },
+    "do": {
+      "name": "Do",
+      "description": "Ask the dog, or the charm, to do something.",
+      "fields": {
+        "device_id": {
+          "name": "Mac",
+          "description": "Which Mac. Optional when only one is paired."
+        },
+        "action": {
+          "name": "Action",
+          "description": "What to do."
+        },
+        "minutes": {
+          "name": "Minutes",
+          "description": "For a focus session: how long. 25 if left out."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_mac": {
+      "message": "No Mac is paired with Charmling."
+    },
+    "pick_a_mac": {
+      "message": "More than one Mac is paired; choose one as the target."
+    },
+    "unknown_device": {
+      "message": "There is no device {device_id}."
+    },
+    "not_a_mac": {
+      "message": "None of the targeted devices is a Charmling Mac."
+    },
+    "unpaired": {
+      "message": "Charmling on {name} no longer accepts this pairing. Pair again from Settings → Devices & services."
+    },
+    "unreachable": {
+      "message": "Charmling on {name} could not be reached ({what}): {error}"
+    },
+    "refused": {
+      "message": "Charmling on {name} cannot do that right now ({what}): there is no dog on the cord, or it is away."
+    }
+  }
+}

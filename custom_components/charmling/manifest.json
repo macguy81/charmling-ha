@@ -1,0 +1,20 @@
+{
+  "domain": "charmling",
+  "name": "Charmling",
+  "codeowners": [
+    "@macguy81"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "webhook"
+  ],
+  "documentation": "https://github.com/macguy81/charmling-ha",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/macguy81/charmling-ha/issues",
+  "requirements": [],
+  "version": "1.0.0",
+  "zeroconf": [
+    "_charmling._tcp.local."
+  ]
+}
