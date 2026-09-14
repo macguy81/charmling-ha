@@ -34,6 +34,9 @@ the value arrives within a second.
 | `sensor…_away` | duration, min | 0 while at the desk, then minutes since the last input | the same idle timer, in minutes, once past five |
 | `sensor…_idle` | duration, s | seconds since the last input | **disabled by default** (it changes every heartbeat and would fill the recorder); enable it on the entity page if you want it |
 | `binary_sensor…_screen` | lock | **off = locked**, on = unlocked | the `com.apple.screenIsLocked` / `screenIsUnlocked` notifications. Lock class in Home Assistant reads "on" as unlocked, so a locked screen shows **off**; the UI says Locked / Unlocked. |
+| `binary_sensor…_display_asleep` | — | on / off | the main display is off (`CGDisplayIsAsleep`): the Mac is awake but the screen went dark |
+| `binary_sensor…_do_not_disturb` | — | on / off | a macOS Focus is on: Do Not Disturb, Work, Sleep, any of them. Read from the file Notification Center keeps (`~/Library/DoNotDisturb/DB/Assertions.json`), every five seconds. |
+| `sensor…_focus_mode` | enum | off · do_not_disturb · work · personal · sleep · driving · fitness · gaming · mindfulness · reading · custom | which Focus. A Focus you named yourself reads `custom`; its name stays on the Mac. |
 
 Moments: `back_at_desk` and `left_desk` fire when at-the-desk flips (see [events](events.md)).
 
@@ -41,17 +44,21 @@ Moments: `back_at_desk` and `left_desk` fire when at-the-desk flips (see [events
 
 | Entity | Type | Values | On the Mac |
 |---|---|---|---|
-| `binary_sensor…_on_air` | running | on / off | the default input device's CoreAudio flag `DeviceIsRunningSomewhere`: any process has the microphone open. A muted Zoom keeps it open, so a call stays on air while muted, which is the right reading for a lamp. Three-second hold on the way off so a reconnect does not blink. No permission is needed to read the flag; no audio is ever read. |
+| `binary_sensor…_on_air` | running | on / off | some process is recording from a microphone. On macOS 14.2 and later this is the same fact the orange dot in the menu bar shows (CoreAudio's per-process `IsRunningInput`); before that, any input-only audio device running. A muted Zoom keeps recording, so a call stays on air while muted, which is the right reading for a lamp. Three-second hold on the way off so a reconnect does not blink. No permission is needed; no audio is ever read. |
+| `binary_sensor…_in_a_call` | — | on / off | on air **and** the process recording is a call app (Zoom, Teams, FaceTime, Webex, Meet, a Slack huddle). A voice memo or dictation is on air but not in a call. On macOS before 14.2, which cannot say which process records, this is "on air while a call app is in front". Only the bundle id is compared; nothing about the process is sent. |
 | `binary_sensor…_camera` | running | on / off | CoreMediaIO's `DeviceIsRunningSomewhere` on every camera: some app has a camera open. No frames are read. |
 | `binary_sensor…_call_app_in_front` | — | on / off | the front app's bundle id is one of: Zoom, Teams, FaceTime, Webex, Google Meet, a Slack huddle. Only the id is looked at, never the window. |
 | `binary_sensor…_presenting` | — | on / off | Keynote or PowerPoint is the front app, or a call app is in front full-screen |
 
 Moments: `call_started`, `call_ended` fire on the on-air edge.
 
-Note that on air is the microphone, not the calendar: a voice memo, a
-dictation and Siri all count. That is the correct reading of "the mic is
-live"; if you want "in a meeting", combine it with `call_app_in_front` or
-`next_meeting_in`.
+On air is the microphone, not the calendar: a voice memo, a dictation and
+Siri all count. That is the correct reading of "the mic is live". For "in
+a meeting" use `in_a_call`, which is on air narrowed to call apps. What
+neither can tell is whether you are *muted* inside the call: macOS does
+not expose an app's mute button, and no tool that watches the microphone
+can. If muted-and-camera-off should count as interruptible, combine
+`in_a_call` with `camera` in a template.
 
 ## Focus
 
@@ -95,9 +102,9 @@ Moments: `ritual` (with `charm`), `bead`, `cord_pulled`.
 | Entity | Type | Values | On the Mac |
 |---|---|---|---|
 | `binary_sensor…_pet_out` | — | on / off | a pet is on the cord instead of a charm |
-| `sensor…_dog` | text | idle · walking · sitting · napping · lying down · trick · looking · carried · dropping · standing down · away | what he is doing right now; `away` is off on a sock errand |
+| `sensor…_dog` | enum | idle · walking · sitting · napping · lying_down · trick · looking · carried · dropping · standing_down · away | what he is doing right now; `away` is off on a sock errand. An enum, so the UI shows "Lying down" and offers the list in pickers. |
 | `sensor…_dog_s_name` | diagnostic | his name | |
-| `sensor…_leash` | diagnostic | short · medium · long · extra long | the leash reach set with the scroll wheel |
+| `sensor…_leash` | enum, diagnostic | short · medium · long · extra_long | the leash reach set with the scroll wheel |
 | `switch…_hushed` | switch | on / off | read and set: hushed, he keeps the sound in and delivers with a look |
 | `switch…_bark_muted` | switch | on / off | read and set: the bark clip is silent |
 
@@ -119,7 +126,7 @@ Trick performs the charm's ritual and Pat is a double take.
 
 | Entity | Type | Values | On the Mac |
 |---|---|---|---|
-| `event…_moment` | event | the moments listed in [events](events.md), with their data as attributes | |
+| `event…_moment` | event | the moments listed in [events](events.md), with their data as attributes | every moment is also a **device trigger**: in the automation editor, pick the Mac as the device and choose "the dog woofed" from the list |
 | `sensor…_last_seen` | timestamp, diagnostic | the last message from the Mac | **disabled by default**; it keeps its value after the Mac goes, which is the point of it |
 
 The device page also shows the app's version (updated from every hello),

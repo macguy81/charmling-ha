@@ -177,8 +177,9 @@ On sleep, on quit, on unpair. The device goes unavailable at once.
 
 | Key | Type | |
 |---|---|---|
-| `on_air`, `camera`, `in_call_app`, `presenting` | bool | |
-| `at_desk`, `screen_locked` | bool | `screen_locked` true means locked |
+| `on_air`, `in_call`, `camera`, `in_call_app`, `presenting` | bool | |
+| `at_desk`, `screen_locked`, `display_asleep`, `do_not_disturb` | bool | `screen_locked` true means locked |
+| `focus_mode` | string | off / do_not_disturb / work / personal / sleep / driving / fitness / gaming / mindfulness / reading / custom |
 | `idle_seconds`, `away_minutes` | int | |
 | `focus` | bool | `focus_remaining` int, minutes |
 | `screen_full` | bool | `work_kind` string, one of the twelve |

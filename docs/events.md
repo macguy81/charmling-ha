@@ -20,6 +20,19 @@ Leave `event_data` at just `type` unless you have more than one Mac, then
 add `device_id` (Developer Tools → Events → listen to `charmling_event`
 shows the exact payload).
 
+**As device triggers**, which is the easiest: in the automation editor
+choose Trigger → Device, pick the Mac, and every moment is in the list as
+a sentence ("the dog on Abi's MacBook Pro woofed", "Abi's MacBook Pro went
+on air"). Nothing to type. In YAML that is:
+
+```yaml
+triggers:
+  - trigger: device
+    domain: charmling
+    device_id: 1c9a2b…
+    type: woof
+```
+
 **On the event entity** `event…_moment`, which holds the last moment and
 its fields as attributes, so it shows in the logbook and on a dashboard,
 and can trigger a state-based automation:

@@ -22,6 +22,12 @@ async def test_binary_sensors(hass: HomeAssistant, paired, push) -> None:
 
 
 async def test_sensors(hass: HomeAssistant, paired, push) -> None:
+    await push({"type": "state", "states": {"in_call": True, "display_asleep": False, "do_not_disturb": True, "focus_mode": "work", "leash": "extra long"}})
+    assert hass.states.get(f"binary_sensor.{P}_in_a_call").state == "on"
+    assert hass.states.get(f"binary_sensor.{P}_display_asleep").state == "off"
+    assert hass.states.get(f"binary_sensor.{P}_do_not_disturb").state == "on"
+    assert hass.states.get(f"sensor.{P}_focus_mode").state == "work"
+    assert hass.states.get(f"sensor.{P}_leash").state == "extra_long"
     await push({"type": "state", "states": {
         "work_kind": "HACKING", "meeting_density": "Heavy", "beads": "many", "next_meeting_minutes": -1,
         "focus_remaining": 12.0, "away_minutes": 3.5, "dog": "lying down", "charm": "", "score": None,
@@ -32,7 +38,7 @@ async def test_sensors(hass: HomeAssistant, paired, push) -> None:
     assert hass.states.get(f"sensor.{P}_next_meeting_in").state == "unknown"     # -1 is "no meeting", not a number
     assert hass.states.get(f"sensor.{P}_focus_remaining").state == "12"
     assert hass.states.get(f"sensor.{P}_away").state == "3.5"
-    assert hass.states.get(f"sensor.{P}_dog").state == "lying down"
+    assert hass.states.get(f"sensor.{P}_dog").state == "lying_down"     # an enum: the Mac's "lying down" folded
     assert hass.states.get(f"sensor.{P}_charm").state == "unknown"               # empty string
     assert hass.states.get(f"sensor.{P}_live_score").state == "unknown"
     assert hass.states.get(f"sensor.{P}_work_kind").attributes["options"][0] == "coding"

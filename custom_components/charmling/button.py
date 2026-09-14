@@ -21,14 +21,14 @@ class CharmlingButtonDescription(ButtonEntityDescription):
 
 
 DESCRIPTIONS: tuple[CharmlingButtonDescription, ...] = (
-    CharmlingButtonDescription(key="call", translation_key="call", action="call", icon="mdi:bullhorn-outline"),
-    CharmlingButtonDescription(key="trick", translation_key="trick", action="trick", icon="mdi:star-outline"),
-    CharmlingButtonDescription(key="speak", translation_key="speak", action="speak", icon="mdi:dog"),
-    CharmlingButtonDescription(key="pat", translation_key="pat", action="pat", icon="mdi:hand-heart-outline"),
-    CharmlingButtonDescription(key="focus_25", translation_key="focus_25", action="focus", extra={"minutes": 25}, icon="mdi:timer-play-outline"),
-    CharmlingButtonDescription(key="stop_focus", translation_key="stop_focus", action="stop_focus", icon="mdi:timer-stop-outline"),
-    CharmlingButtonDescription(key="nap", translation_key="nap", action="nap", icon="mdi:sleep"),
-    CharmlingButtonDescription(key="wake", translation_key="wake", action="wake", icon="mdi:alarm"),
+    CharmlingButtonDescription(key="call", translation_key="call", action="call"),
+    CharmlingButtonDescription(key="trick", translation_key="trick", action="trick"),
+    CharmlingButtonDescription(key="speak", translation_key="speak", action="speak"),
+    CharmlingButtonDescription(key="pat", translation_key="pat", action="pat"),
+    CharmlingButtonDescription(key="focus_25", translation_key="focus_25", action="focus", extra={"minutes": 25}),
+    CharmlingButtonDescription(key="stop_focus", translation_key="stop_focus", action="stop_focus"),
+    CharmlingButtonDescription(key="nap", translation_key="nap", action="nap"),
+    CharmlingButtonDescription(key="wake", translation_key="wake", action="wake"),
 )
 
 

@@ -20,30 +20,36 @@ PARALLEL_UPDATES = 0
 WORK_KINDS = ["coding", "writing", "design", "reading", "browsing", "chat", "mail",
               "meeting", "media", "spreadsheets", "other", "idle"]
 DENSITIES = ["light", "normal", "heavy", "unknown"]
+DOG_STATES = ["idle", "walking", "sitting", "napping", "lying_down", "trick", "looking", "carried", "dropping",
+              "standing_down", "away"]
+LEASHES = ["short", "medium", "long", "extra_long"]
+FOCUS_MODES = ["off", "do_not_disturb", "work", "personal", "sleep", "driving", "fitness", "gaming",
+               "mindfulness", "reading", "custom"]
 
 DESCRIPTIONS: tuple[SensorEntityDescription, ...] = (
     # changes every heartbeat: off unless wanted, so the recorder is not fed a row every 30 s
     SensorEntityDescription(key="idle_seconds", translation_key="idle_seconds", native_unit_of_measurement=UnitOfTime.SECONDS,
-                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT, icon="mdi:timer-sand",
+                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT,
                             entity_registry_enabled_default=False),
     SensorEntityDescription(key="away_minutes", translation_key="away_minutes", native_unit_of_measurement=UnitOfTime.MINUTES,
-                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT, icon="mdi:walk"),
+                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT),
     SensorEntityDescription(key="focus_remaining", translation_key="focus_remaining", native_unit_of_measurement=UnitOfTime.MINUTES,
-                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT, icon="mdi:timer-outline"),
-    SensorEntityDescription(key="work_kind", translation_key="work_kind", device_class=SensorDeviceClass.ENUM, options=WORK_KINDS, icon="mdi:briefcase-outline"),
-    SensorEntityDescription(key="front_app", translation_key="front_app", icon="mdi:application-outline"),
+                            device_class=SensorDeviceClass.DURATION, state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="work_kind", translation_key="work_kind", device_class=SensorDeviceClass.ENUM, options=WORK_KINDS),
+    SensorEntityDescription(key="front_app", translation_key="front_app"),
     SensorEntityDescription(key="next_meeting_minutes", translation_key="next_meeting_minutes", native_unit_of_measurement=UnitOfTime.MINUTES,
-                            state_class=SensorStateClass.MEASUREMENT, icon="mdi:calendar-clock"),
-    SensorEntityDescription(key="meeting_density", translation_key="meeting_density", device_class=SensorDeviceClass.ENUM, options=DENSITIES, icon="mdi:calendar-month"),
-    SensorEntityDescription(key="charm", translation_key="charm", icon="mdi:necklace"),
-    SensorEntityDescription(key="beads", translation_key="beads", state_class=SensorStateClass.MEASUREMENT, icon="mdi:circle-multiple"),
-    SensorEntityDescription(key="basket", translation_key="basket", state_class=SensorStateClass.MEASUREMENT, icon="mdi:basket"),
-    SensorEntityDescription(key="banners_10min", translation_key="banners_10min", state_class=SensorStateClass.MEASUREMENT, icon="mdi:bell-ring-outline"),
-    SensorEntityDescription(key="cord_friends", translation_key="cord_friends", state_class=SensorStateClass.MEASUREMENT, icon="mdi:account-group"),
-    SensorEntityDescription(key="dog", translation_key="dog", icon="mdi:dog"),
-    SensorEntityDescription(key="dog_name", translation_key="dog_name", icon="mdi:tag-outline", entity_category=EntityCategory.DIAGNOSTIC),
-    SensorEntityDescription(key="leash", translation_key="leash", icon="mdi:vector-line", entity_category=EntityCategory.DIAGNOSTIC),
-    SensorEntityDescription(key="score", translation_key="score", icon="mdi:scoreboard-outline"),
+                            state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="meeting_density", translation_key="meeting_density", device_class=SensorDeviceClass.ENUM, options=DENSITIES),
+    SensorEntityDescription(key="focus_mode", translation_key="focus_mode", device_class=SensorDeviceClass.ENUM, options=FOCUS_MODES),
+    SensorEntityDescription(key="charm", translation_key="charm"),
+    SensorEntityDescription(key="beads", translation_key="beads", state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="basket", translation_key="basket", state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="banners_10min", translation_key="banners_10min", state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="cord_friends", translation_key="cord_friends", state_class=SensorStateClass.MEASUREMENT),
+    SensorEntityDescription(key="dog", translation_key="dog", device_class=SensorDeviceClass.ENUM, options=DOG_STATES),
+    SensorEntityDescription(key="dog_name", translation_key="dog_name", entity_category=EntityCategory.DIAGNOSTIC),
+    SensorEntityDescription(key="leash", translation_key="leash", device_class=SensorDeviceClass.ENUM, options=LEASHES, entity_category=EntityCategory.DIAGNOSTIC),
+    SensorEntityDescription(key="score", translation_key="score"),
     SensorEntityDescription(key="last_seen", translation_key="last_seen", device_class=SensorDeviceClass.TIMESTAMP,
                             entity_category=EntityCategory.DIAGNOSTIC, entity_registry_enabled_default=False),
 )

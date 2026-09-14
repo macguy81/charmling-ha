@@ -22,8 +22,8 @@ class CharmlingSwitchDescription(SwitchEntityDescription):
 
 
 DESCRIPTIONS: tuple[CharmlingSwitchDescription, ...] = (
-    CharmlingSwitchDescription(key="hushed", translation_key="hushed", on_action="hush", off_action="unhush", icon="mdi:volume-off"),
-    CharmlingSwitchDescription(key="muted", translation_key="muted", on_action="mute", off_action="unmute", icon="mdi:volume-mute"),
+    CharmlingSwitchDescription(key="hushed", translation_key="hushed", on_action="hush", off_action="unhush"),
+    CharmlingSwitchDescription(key="muted", translation_key="muted", on_action="mute", off_action="unmute"),
 )
 
 

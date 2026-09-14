@@ -32,7 +32,7 @@ async def test_setup_seeds_from_state_and_makes_the_device(hass: HomeAssistant, 
 async def test_all_entities_exist_and_the_noisy_ones_are_off(hass: HomeAssistant, paired) -> None:
     registry = er.async_get(hass)
     mine = [e for e in registry.entities.values() if e.platform == DOMAIN]
-    assert len(mine) == 38
+    assert len(mine) == 42
     assert registry.async_get(f"sensor.{P}_idle").disabled_by is er.RegistryEntryDisabler.INTEGRATION
     assert registry.async_get(f"sensor.{P}_last_seen").disabled_by is er.RegistryEntryDisabler.INTEGRATION
     assert registry.async_get(f"sensor.{P}_dog_s_name").entity_category == "diagnostic"
@@ -67,10 +67,10 @@ async def test_webhook_rejects_junk(hass: HomeAssistant, paired, push) -> None:
 
 
 async def test_webhook_cleans_values(hass: HomeAssistant, paired, push) -> None:
-    await push({"type": "state", "states": {"on_air": {"nested": 1}, "dog": "x" * 500, "k" * 100: 1, "camera": True}})
+    await push({"type": "state", "states": {"on_air": {"nested": 1}, "charm": "x" * 500, "k" * 100: 1, "camera": True}})
     assert hass.states.get(f"binary_sensor.{P}_on_air").state == "off"       # nested value dropped
     assert hass.states.get(f"binary_sensor.{P}_camera").state == "on"        # sibling kept
-    assert len(hass.states.get(f"sensor.{P}_dog").state) == 200              # truncated
+    assert len(hass.states.get(f"sensor.{P}_charm").state) == 200            # truncated
     await push({"type": "state", "states": {f"k{i}": i for i in range(300)} | {"on_air": True}})
     assert hass.states.get(f"binary_sensor.{P}_on_air").state == "off"       # a 300-key dict is not a Mac
 

@@ -14,3 +14,7 @@ The first release.
 - `next_meeting_in` reads unknown, not −1, when there is no meeting
 - Multi-target actions try every Mac and report the ones that failed
 - Noisy diagnostics (`idle_seconds`, `last_seen`) disabled by default
+- `in_a_call`: on air narrowed to call apps, from CoreAudio's per-process recording flag (macOS 14.2+)
+- `display_asleep`, `do_not_disturb` and `focus_mode` (the Apple Focus kind)
+- Every moment as a device trigger in the automation editor
+- Icon translations; `dog` and `leash` as enums with translated states

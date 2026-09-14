@@ -1,0 +1,174 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "on_air": {
+        "default": "mdi:microphone-off",
+        "state": {
+          "on": "mdi:microphone"
+        }
+      },
+      "camera": {
+        "default": "mdi:video-off",
+        "state": {
+          "on": "mdi:video"
+        }
+      },
+      "in_call": {
+        "default": "mdi:phone-hangup",
+        "state": {
+          "on": "mdi:phone-in-talk"
+        }
+      },
+      "in_call_app": {
+        "default": "mdi:phone"
+      },
+      "presenting": {
+        "default": "mdi:presentation-play"
+      },
+      "do_not_disturb": {
+        "default": "mdi:moon-waning-crescent"
+      },
+      "focus": {
+        "default": "mdi:target"
+      },
+      "screen_full": {
+        "default": "mdi:fullscreen"
+      },
+      "wander": {
+        "default": "mdi:scissors-cutting"
+      },
+      "pet_out": {
+        "default": "mdi:dog-side"
+      },
+      "display_asleep": {
+        "default": "mdi:monitor",
+        "state": {
+          "on": "mdi:monitor-off"
+        }
+      }
+    },
+    "sensor": {
+      "idle_seconds": {
+        "default": "mdi:timer-sand"
+      },
+      "away_minutes": {
+        "default": "mdi:walk"
+      },
+      "focus_remaining": {
+        "default": "mdi:timer-outline"
+      },
+      "work_kind": {
+        "default": "mdi:briefcase-outline"
+      },
+      "front_app": {
+        "default": "mdi:application-outline"
+      },
+      "next_meeting_minutes": {
+        "default": "mdi:calendar-clock"
+      },
+      "meeting_density": {
+        "default": "mdi:calendar-month"
+      },
+      "charm": {
+        "default": "mdi:necklace"
+      },
+      "beads": {
+        "default": "mdi:circle-multiple"
+      },
+      "basket": {
+        "default": "mdi:basket"
+      },
+      "banners_10min": {
+        "default": "mdi:bell-ring-outline"
+      },
+      "cord_friends": {
+        "default": "mdi:account-group"
+      },
+      "dog": {
+        "default": "mdi:dog",
+        "state": {
+          "napping": "mdi:sleep",
+          "lying_down": "mdi:sleep",
+          "walking": "mdi:walk",
+          "trick": "mdi:star",
+          "away": "mdi:map-marker-off",
+          "carried": "mdi:hand-back-left",
+          "looking": "mdi:eye"
+        }
+      },
+      "dog_name": {
+        "default": "mdi:tag-outline"
+      },
+      "leash": {
+        "default": "mdi:vector-line"
+      },
+      "score": {
+        "default": "mdi:scoreboard-outline"
+      },
+      "focus_mode": {
+        "default": "mdi:moon-waning-crescent",
+        "state": {
+          "off": "mdi:moon-waning-crescent",
+          "work": "mdi:briefcase",
+          "sleep": "mdi:bed",
+          "driving": "mdi:car",
+          "fitness": "mdi:run",
+          "gaming": "mdi:gamepad-variant",
+          "reading": "mdi:book-open-variant",
+          "personal": "mdi:account",
+          "mindfulness": "mdi:meditation",
+          "do_not_disturb": "mdi:minus-circle",
+          "custom": "mdi:moon-waning-crescent"
+        }
+      },
+      "last_seen": {
+        "default": "mdi:clock-check-outline"
+      }
+    },
+    "button": {
+      "call": {
+        "default": "mdi:bullhorn-outline"
+      },
+      "trick": {
+        "default": "mdi:star-outline"
+      },
+      "speak": {
+        "default": "mdi:dog"
+      },
+      "pat": {
+        "default": "mdi:hand-heart-outline"
+      },
+      "focus_25": {
+        "default": "mdi:timer-play-outline"
+      },
+      "stop_focus": {
+        "default": "mdi:timer-stop-outline"
+      },
+      "nap": {
+        "default": "mdi:sleep"
+      },
+      "wake": {
+        "default": "mdi:alarm"
+      }
+    },
+    "switch": {
+      "hushed": {
+        "default": "mdi:volume-high",
+        "state": {
+          "on": "mdi:volume-off"
+        }
+      },
+      "muted": {
+        "default": "mdi:volume-high",
+        "state": {
+          "on": "mdi:volume-mute"
+        }
+      }
+    },
+    "event": {
+      "moment": {
+        "default": "mdi:bell-badge-outline"
+      }
+    }
+  }
+}

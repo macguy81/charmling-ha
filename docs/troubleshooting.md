@@ -64,6 +64,20 @@ front and the score are off from the start; tick them if you want them.
 `next_meeting_in` is unknown when there is no meeting in eight hours or
 Meeting Radar was never granted calendar access.
 
+## Do Not Disturb never turns on
+
+The Focus state is read from `~/Library/DoNotDisturb/DB/Assertions.json`,
+which macOS keeps for Notification Center. A Focus turned on by hand or
+by a schedule writes there; one that is only *mirrored* from an iPhone
+sometimes takes a few seconds. If the file is unreadable (some MDM
+profiles lock the folder) the sensor stays off.
+
+## "In a call" is on for a voice memo
+
+On macOS before 14.2, the system cannot say which process is recording,
+so `in_a_call` falls back to "on air while a call app is in front". On
+14.2 and later it is exact. `on_air` is always "any recording".
+
 ## "No longer accepts this pairing"
 
 The Mac was unpaired (the pane's button), or Charmling was reinstalled

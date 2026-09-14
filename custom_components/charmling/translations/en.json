@@ -86,6 +86,15 @@
       },
       "pet_out": {
         "name": "Pet out"
+      },
+      "in_call": {
+        "name": "In a call"
+      },
+      "display_asleep": {
+        "name": "Display asleep"
+      },
+      "do_not_disturb": {
+        "name": "Do Not Disturb"
       }
     },
     "sensor": {
@@ -146,19 +155,54 @@
         "name": "On the shared cord"
       },
       "dog": {
-        "name": "Dog"
+        "name": "Dog",
+        "state": {
+          "idle": "Idle",
+          "walking": "Walking",
+          "sitting": "Sitting",
+          "napping": "Napping",
+          "lying_down": "Lying down",
+          "trick": "Trick",
+          "looking": "Looking",
+          "carried": "Carried",
+          "dropping": "Dropping",
+          "standing_down": "Standing down",
+          "away": "Away"
+        }
       },
       "dog_name": {
         "name": "Dog's name"
       },
       "leash": {
-        "name": "Leash"
+        "name": "Leash",
+        "state": {
+          "short": "Short",
+          "medium": "Medium",
+          "long": "Long",
+          "extra_long": "Extra long"
+        }
       },
       "score": {
         "name": "Live score"
       },
       "last_seen": {
         "name": "Last seen"
+      },
+      "focus_mode": {
+        "name": "Focus mode",
+        "state": {
+          "off": "Off",
+          "do_not_disturb": "Do Not Disturb",
+          "work": "Work",
+          "personal": "Personal",
+          "sleep": "Sleep",
+          "driving": "Driving",
+          "fitness": "Fitness",
+          "gaming": "Gaming",
+          "mindfulness": "Mindfulness",
+          "reading": "Reading",
+          "custom": "Custom"
+        }
       }
     },
     "event": {
@@ -336,6 +380,27 @@
     },
     "refused": {
       "message": "Charmling on {name} cannot do that right now ({what}): there is no dog on the cord, or it is away."
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "call_started": "{entity_name} went on air (a call started)",
+      "call_ended": "{entity_name} went off air",
+      "focus_started": "a focus session started on {entity_name}",
+      "focus_ended": "the focus session on {entity_name} was stopped",
+      "break": "the focus session on {entity_name} ended in a break",
+      "stretch": "{entity_name} nudged a stretch",
+      "ritual": "the charm on {entity_name} did its ritual",
+      "bead": "a bead was hung on {entity_name}",
+      "cord_pulled": "the cord on {entity_name} was pulled",
+      "bark": "the dog on {entity_name} barked",
+      "woof": "the dog on {entity_name} woofed",
+      "trick": "the dog on {entity_name} did the trick",
+      "nap": "the dog on {entity_name} lay down for a nap",
+      "wake": "the dog on {entity_name} woke up",
+      "delivered": "the dog on {entity_name} delivered a line",
+      "back_at_desk": "someone came back to {entity_name}",
+      "left_desk": "{entity_name} was left"
     }
   }
 }

@@ -43,7 +43,19 @@ to pair again (a reauth flow, same device, same entities). If the Mac moves
 to a new address, Bonjour usually tells Home Assistant; if not, **Reconfigure**
 on the device takes the new address.
 
+## Why not just the companion app?
+
+The official companion app reports the camera, the microphone, the front
+app and an Apple Focus, and it is good; run both if you like. Charmling
+adds meaning (in a call, presenting, the kind of work, minutes to the next
+meeting, at the desk by your hands on the keys), pushes every change in a
+second with a proper goodbye when the Mac sleeps, and lets the house talk
+back through the charm or the dog. [The longer answer, and what the
+community's on-air-light threads taught us](docs/why.md).
+
 ## The docs
+
+- [Why this, and what the community taught us](docs/why.md)
 
 - [Every entity, and where it comes from](docs/entities.md)
 - [Moments (events)](docs/events.md)
@@ -61,11 +73,14 @@ for a Mac called "Abi's MacBook Pro"; yours follow your Mac's name.
 | Entity | What it is |
 |---|---|
 | `binary_sensor.abi_s_macbook_pro_on_air` | the microphone is open by any app: a call (a muted Zoom keeps it open). Three-second hold on the way off. |
+| `binary_sensor…_in_a_call` | on air, and the app recording is a call app: a voice memo is not a meeting |
 | `binary_sensor…_camera` | a camera is open by any app |
 | `binary_sensor…_call_app_in_front` | Zoom, Teams, Meet, FaceTime, Webex or a huddle is the front app |
 | `binary_sensor…_presenting` | Keynote or PowerPoint in front, or a full-screen call |
 | `binary_sensor…_at_the_desk` | input in the last five minutes (occupancy) |
 | `binary_sensor…_screen` | lock class: off means the screen is locked |
+| `binary_sensor…_display_asleep` | the screen went dark |
+| `binary_sensor…_do_not_disturb`, `sensor…_focus_mode` | a macOS Focus is on, and which kind (work, sleep, do not disturb…) |
 | `binary_sensor…_focus_session`, `sensor…_focus_remaining` | the focus session and its minutes left |
 | `binary_sensor…_full_screen` | something full-screen in front |
 | `sensor…_work_kind` | coding, writing, design, reading, browsing, chat, mail, meeting, media, spreadsheets, other, idle. A category from the front app, never a title. |
@@ -76,6 +91,7 @@ for a Mac called "Abi's MacBook Pro"; yours follow your Mac's name.
 | `sensor…_charm`, `binary_sensor…_wander_mode` | which charm is on the cord, and whether it roams |
 | `sensor…_beads_waiting`, `sensor…_basket`, `sensor…_notification_banners_10_min`, `sensor…_on_the_shared_cord` | counts, never labels |
 | `binary_sensor…_pet_out`, `sensor…_dog`, `sensor…_dog_s_name`, `sensor…_leash` | the dog and what he is doing: idle, walking, sitting, napping, lying down, trick, looking, carried, standing down |
+| device triggers | every moment below, as a sentence in the automation editor's device picker |
 | `switch…_hushed`, `switch…_bark_muted` | read and set |
 | `sensor…_live_score` | the followed match. Off by default on the Mac. |
 | `event…_moment` | the moments (below), as an event entity |
@@ -94,12 +110,19 @@ and mirrored on the event entity: `call_started`, `call_ended`,
 (`charm`), `bead`, `bark`, `woof`, `trick`, `nap` (`why`), `wake`,
 `delivered`, `back_at_desk`, `left_desk`.
 
+In the automation editor: Trigger → Device → the Mac → "the dog woofed".
+In YAML, either the device trigger or the bus event:
+
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: device
+    domain: charmling
+    device_id: 1c9a2b…
+    type: woof
+  # or
+  - trigger: event
     event_type: charmling_event
-    event_data:
-      type: woof
+    event_data: {type: woof}
 ```
 
 ## The house talks back
@@ -210,7 +233,7 @@ your network.
 
 hassfest (Home Assistant's own integration validator) and ruff pass in CI
 on every push, along with a pytest suite (`tests/`, on
-pytest-homeassistant-custom-component) covering every flow, the webhook,
+pytest-homeassistant-custom-component, 51 tests) covering every flow, the webhook,
 every platform, the services and their failure modes. `tests/live` holds
 a second suite that drives a real Home Assistant with two pretend Macs
 through pairing, malformed input, two devices, reauth, reconfigure,

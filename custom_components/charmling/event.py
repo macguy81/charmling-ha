@@ -12,7 +12,7 @@ from .entity import CharmlingEntity
 
 PARALLEL_UPDATES = 0
 
-DESCRIPTION = EventEntityDescription(key="moment", translation_key="moment", event_types=EVENT_TYPES, icon="mdi:bell-badge-outline")
+DESCRIPTION = EventEntityDescription(key="moment", translation_key="moment", event_types=EVENT_TYPES)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: CharmlingConfigEntry, async_add_entities: AddEntitiesCallback) -> None:

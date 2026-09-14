@@ -45,7 +45,7 @@ e1 = [e for e in entries() if "Abi" in e["title"]][0]["entry_id"]
 check("on_air seeded from /state", st(f"binary_sensor.{P1}_on_air") == "off", st(f"binary_sensor.{P1}_on_air"))
 regs = asyncio.run(ws_cmd(type="config/entity_registry/list"))
 mine = {e["entity_id"]: e for e in regs if e["platform"] == "charmling"}
-check("38 entities registered", len(mine) == 38, len(mine))
+check("42 entities registered", len(mine) == 42, len(mine))
 check("idle_seconds disabled by default", mine.get(f"sensor.{P1}_idle", {}).get("disabled_by") == "integration", mine.get(f"sensor.{P1}_idle"))
 check("last_seen disabled by default", mine.get(f"sensor.{P1}_last_seen", {}).get("disabled_by") == "integration")
 
@@ -59,9 +59,9 @@ r = requests.post(wh, json={"type": "state", "states": "on_air=on"}, headers=hdr
 big = {f"k{i}": i for i in range(300)}
 r = requests.post(wh, json={"type": "state", "states": {**big, "on_air": True}}, headers=hdr)
 check("300-key states dropped whole", st(f"binary_sensor.{P1}_on_air") == "off", st(f"binary_sensor.{P1}_on_air"))
-r = requests.post(wh, json={"type": "state", "states": {"on_air": {"nested": 1}, "dog": "x" * 500, "k" * 100: 1, "camera": True}}, headers=hdr)
+r = requests.post(wh, json={"type": "state", "states": {"on_air": {"nested": 1}, "charm": "x" * 500, "k" * 100: 1, "camera": True}}, headers=hdr)
 check("nested value dropped, sibling kept", st(f"binary_sensor.{P1}_on_air") == "off" and st(f"binary_sensor.{P1}_camera") == "on")
-check("long string truncated to 200", len(st(f"sensor.{P1}_dog")) == 200, len(st(f"sensor.{P1}_dog")))
+check("long string truncated to 200", len(st(f"sensor.{P1}_charm")) == 200, len(st(f"sensor.{P1}_charm")))
 r = requests.post(wh, json={"type": "event"}, headers=hdr); check("event without name -> 200, nothing", r.status_code == 200)
 r = requests.post(wh, json={"type": "event", "event": "dance", "x": {"deep": True}}, headers=hdr); time.sleep(0.3)
 check("unknown event type keeps event entity unchanged", attrs(f"event.{P1}_moment").get("event_type") is None, attrs(f"event.{P1}_moment").get("event_type"))

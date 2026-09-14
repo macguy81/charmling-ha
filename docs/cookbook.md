@@ -46,6 +46,36 @@ actions:
     target: {entity_id: light.office_door}
 ```
 
+### In a call, not just on air
+
+`on_air` is any recording, a voice memo included. `in_a_call` is the mic
+held by Zoom, Teams, FaceTime, Webex, Meet or a huddle. Most people want
+the lamp on the second.
+
+```yaml
+alias: Office door lamp, calls only
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.abi_s_macbook_pro_in_a_call
+actions:
+  - action: light.turn_on
+    target: {entity_id: light.office_door}
+    data:
+      color_name: "{{ 'red' if trigger.to_state.state == 'on' else 'white' }}"
+```
+
+Strict version, for people who are happy to be interrupted while muted
+with the camera off: red only when the camera is on too.
+
+```yaml
+template:
+  - binary_sensor:
+      - name: Abi visibly on a call
+        state: >
+          {{ is_state('binary_sensor.abi_s_macbook_pro_in_a_call', 'on')
+             and is_state('binary_sensor.abi_s_macbook_pro_camera', 'on') }}
+```
+
 ### Camera on: the sign, and the blinds
 
 A camera is stronger than a mic: people can see the room. Close the blinds
@@ -294,6 +324,64 @@ triggers:
 actions:
   - action: light.turn_off
     target: {entity_id: light.desk_lamp}
+```
+
+### The screen went dark
+
+The display sleeping is the earliest "stepped away" there is: before the
+five-minute idle, before the lock.
+
+```yaml
+alias: Display asleep, desk lamp off
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.abi_s_macbook_pro_display_asleep
+    to: "on"
+actions:
+  - action: light.turn_off
+    target: {entity_id: light.desk_lamp}
+```
+
+### Apple Focus, house-wide
+
+Turn on Work Focus on the Mac and the whole house follows; Sleep Focus
+puts the office to bed.
+
+```yaml
+alias: Focus follows the Mac
+triggers:
+  - trigger: state
+    entity_id: sensor.abi_s_macbook_pro_focus_mode
+actions:
+  - choose:
+      - conditions: "{{ trigger.to_state.state == 'work' }}"
+        sequence:
+          - action: scene.turn_on
+            target: {entity_id: scene.office_work}
+      - conditions: "{{ trigger.to_state.state == 'sleep' }}"
+        sequence:
+          - action: scene.turn_on
+            target: {entity_id: scene.office_off}
+      - conditions: "{{ trigger.to_state.state == 'do_not_disturb' }}"
+        sequence:
+          - action: input_boolean.turn_on
+            target: {entity_id: input_boolean.quiet_mode}
+```
+
+And keep the house's lines out while any Focus is on:
+
+```yaml
+alias: Bin day
+triggers:
+  - trigger: time
+    at: "19:00:00"
+conditions:
+  - condition: state
+    entity_id: binary_sensor.abi_s_macbook_pro_do_not_disturb
+    state: "off"
+actions:
+  - action: charmling.say
+    data: {message: "🗑️ bins out tonight", category: done}
 ```
 
 ### The Mac is gone: the office is empty
@@ -597,12 +685,15 @@ actions:
 
 ### The woof, on a bulb
 
+In the editor this is Trigger → Device → the Mac → "the dog woofed". In YAML:
+
 ```yaml
 alias: Woof
 triggers:
-  - trigger: event
-    event_type: charmling_event
-    event_data: {type: woof}
+  - trigger: device
+    domain: charmling
+    device_id: 1c9a2b…            # the Mac's device id
+    type: woof
 actions:
   - action: light.turn_on
     target: {entity_id: light.desk_lamp}

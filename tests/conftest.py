@@ -35,6 +35,7 @@ STATES: dict[str, Any] = {
     "next_meeting_minutes": 42, "meeting_density": "light", "wander": False, "charm": "maneki",
     "beads": 2, "basket": 0, "banners_10min": 1, "cord_friends": 0, "pet_out": True,
     "dog": "sitting", "dog_name": "Biscuit", "hushed": False, "muted": False, "leash": "medium",
+    "in_call": False, "display_asleep": False, "do_not_disturb": False, "focus_mode": "off",
 }
 
 
