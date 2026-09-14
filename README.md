@@ -1,3 +1,5 @@
+<p align="center"><img src="brands/custom_integrations/charmling/logo@2x.png" alt="Charmling" height="128"></p>
+
 # Charmling for Home Assistant
 
 Your Mac, as a device in Home Assistant: whether you are at the desk, on a

@@ -17,9 +17,8 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # brands: the images live in home-assistant/brands and need a pull request there;
-          # images: the README carries no screenshot yet
-          ignore: "brands images"
+          # brands: the images live in home-assistant/brands; drop this once that pull request is merged
+          ignore: "brands"
   tests:
     runs-on: ubuntu-latest
     steps:
