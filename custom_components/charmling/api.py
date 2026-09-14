@@ -7,8 +7,8 @@ the Mac's /state is the same set of states it pushes to the webhook.
 
 from __future__ import annotations
 
-import asyncio
 import contextlib
+import json
 from typing import Any
 
 import aiohttp
@@ -57,13 +57,16 @@ class CharmlingApi:
                     raise CharmlingAuthError(f"{path}: refused ({resp.status})")
                 if resp.status == 409:
                     raise CharmlingConflictError(f"{path}: not that Mac")
+                text = await resp.text()
                 if resp.status >= 400:
-                    text = await resp.text()
                     raise CharmlingError(f"{path}: HTTP {resp.status} {text[:120]}")
-                if resp.content_type == "application/json":
-                    return await resp.json()
-                return {}
-        except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+                # the Mac always answers JSON; do not depend on the header to say so
+                try:
+                    body = json.loads(text) if text else {}
+                except ValueError:
+                    return {}
+                return body if isinstance(body, dict) else {}
+        except (TimeoutError, aiohttp.ClientError) as err:
             raise CharmlingError(f"cannot reach the Mac at {self.base}: {err}") from err
 
     async def identify(self) -> dict[str, Any]:

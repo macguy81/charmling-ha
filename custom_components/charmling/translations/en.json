@@ -44,7 +44,8 @@
     "error": {
       "invalid_code": "That code was not accepted. Open the pane on the Mac again; it shows a fresh one.",
       "cannot_connect": "Could not reach Charmling on the Mac. Is the app running, and is the Mac on this network?",
-      "different_mac": "That address belongs to a different Mac. Add it as a new device instead."
+      "different_mac": "That address belongs to a different Mac. Add it as a new device instead.",
+      "no_url": "Home Assistant does not know its own address on this network. Set the internal URL in Settings → System → Network, then try again."
     },
     "abort": {
       "not_charmling": "That is not a Charmling.",

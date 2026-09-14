@@ -43,6 +43,16 @@ to pair again (a reauth flow, same device, same entities). If the Mac moves
 to a new address, Bonjour usually tells Home Assistant; if not, **Reconfigure**
 on the device takes the new address.
 
+## The docs
+
+- [Every entity, and where it comes from](docs/entities.md)
+- [Moments (events)](docs/events.md)
+- [The house talks back (actions)](docs/actions.md)
+- [The cookbook: automations for everything](docs/cookbook.md)
+- [The protocol between the Mac and Home Assistant](docs/protocol.md)
+- [Privacy](docs/privacy.md)
+- [Troubleshooting](docs/troubleshooting.md)
+
 ## What you get
 
 One device per Mac, named after it, with these entities. Names below are
@@ -198,10 +208,13 @@ your network.
 
 ## Tested
 
-hassfest (Home Assistant's own integration validator) passes. `tests/live`
-holds a suite that drives a real Home Assistant with two pretend Macs
-through pairing, malformed input, two devices, reauth, reconfigure, reloads
-and restarts.
+hassfest (Home Assistant's own integration validator) and ruff pass in CI
+on every push, along with a pytest suite (`tests/`, on
+pytest-homeassistant-custom-component) covering every flow, the webhook,
+every platform, the services and their failure modes. `tests/live` holds
+a second suite that drives a real Home Assistant with two pretend Macs
+through pairing, malformed input, two devices, reauth, reconfigure,
+reloads and restarts.
 
 ## Notes
 

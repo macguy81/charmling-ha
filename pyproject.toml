@@ -1,0 +1,18 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+norecursedirs = ["tests/live"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "PL"]
+ignore = ["E501", "PLR0913", "PLR2004", "PLR0912", "PLR0911"]
+
+[tool.ruff.lint.per-file-ignores]
+# the live suite and the pretend Mac are scripts, written tersely on purpose
+"tests/live/*" = ["E701", "E702", "PLW0603", "SIM115", "PLW1510", "PLR1714", "B007", "PLC0415"]
+"tests/*" = ["PLC0415"]

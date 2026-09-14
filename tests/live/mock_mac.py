@@ -1,6 +1,9 @@
 """A pretend Charmling on a Mac: the endpoints, the pairing code, the webhook push."""
-import asyncio, json, secrets, sys, time
-from aiohttp import web, ClientSession
+import asyncio
+import secrets
+import sys
+
+from aiohttp import ClientSession, web
 
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 41417
 CODE = "123456"
@@ -74,9 +77,8 @@ async def control(req):
 async def send(body):
     if not WEBHOOK: return "unpaired"
     url = WEBHOOK if WEBHOOK.startswith("http") else "http://127.0.0.1:8123" + WEBHOOK
-    async with ClientSession() as s:
-        async with s.post(url, json=body, headers={"X-Charmling-Secret": SECRET}) as r:
-            return r.status
+    async with ClientSession() as s, s.post(url, json=body, headers={"X-Charmling-Secret": SECRET}) as r:
+        return r.status
 
 async def push(changed):
     return await send({"type": "state", "states": changed})

@@ -11,6 +11,7 @@ State leaves the Mac; content never does.
 
 from __future__ import annotations
 
+import asyncio
 import hmac
 import logging
 from http import HTTPStatus
@@ -22,7 +23,7 @@ from homeassistant.components import webhook
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.core import HomeAssistant, ServiceCall, callback
-from homeassistant.exceptions import ServiceValidationError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -159,6 +160,11 @@ def _make_webhook_handler(entry: CharmlingConfigEntry):
     return handle
 
 
+def _one_line(text: str) -> str:
+    """A line the charm can show: no control characters, whitespace folded."""
+    return " ".join(text.split())
+
+
 def _clean_states(raw: Any) -> dict[str, Any]:
     """Only scalars, only sane sizes: what a Mac sends, nothing an attacker could."""
     if not isinstance(raw, dict) or len(raw) > MAX_STATES:
@@ -195,12 +201,7 @@ def _handle_message(hass: HomeAssistant, entry: CharmlingConfigEntry, body: dict
         })
         data.mark_seen()
     elif kind == "hello":
-        version = str(body.get("version", ""))[:32]
-        if version and version != data.version:
-            data.version = version
-            hass.config_entries.async_update_entry(entry, data={**entry.data, CONF_VERSION: version})
-            if data.device_id:
-                dr.async_get(hass).async_update_device(data.device_id, sw_version=version)
+        data.set_version(str(body.get("version", ""))[:32])
         data.apply(_clean_states(body.get("states")))
         data.mark_seen()
     elif kind == "bye":
@@ -243,20 +244,32 @@ def _entries_for_call(hass: HomeAssistant, call: ServiceCall) -> list[CharmlingC
     return out
 
 
+async def _ask_all(hass: HomeAssistant, call: ServiceCall, what: str, make) -> None:
+    """Every targeted Mac is asked, even if an earlier one is asleep; then one error for all that failed."""
+    entries = _entries_for_call(hass, call)
+    results = await asyncio.gather(
+        *(async_ask(e.runtime_data, what, make(e.runtime_data.api)) for e in entries), return_exceptions=True
+    )
+    failed = [r for r in results if isinstance(r, Exception)]
+    if not failed:
+        return
+    if len(failed) == 1:
+        raise failed[0]
+    raise HomeAssistantError("; ".join(str(r) for r in failed))
+
+
 @callback
 def _async_register_services(hass: HomeAssistant) -> None:
     async def say(call: ServiceCall) -> None:
-        for entry in _entries_for_call(hass, call):
-            await async_ask(entry.runtime_data, "say", entry.runtime_data.api.say(call.data["category"], call.data["message"], call.data["sound"]))
+        text = _one_line(call.data["message"])
+        await _ask_all(hass, call, "say", lambda api: api.say(call.data["category"], text, call.data["sound"]))
 
     async def water(call: ServiceCall) -> None:
-        for entry in _entries_for_call(hass, call):
-            await async_ask(entry.runtime_data, "water", entry.runtime_data.api.water(call.data["plant"]))
+        await _ask_all(hass, call, "water", lambda api: api.water(call.data["plant"]))
 
     async def do(call: ServiceCall) -> None:
         extra = {"minutes": call.data["minutes"]} if "minutes" in call.data else {}
-        for entry in _entries_for_call(hass, call):
-            await async_ask(entry.runtime_data, call.data["action"], entry.runtime_data.api.do(call.data["action"], **extra))
+        await _ask_all(hass, call, call.data["action"], lambda api: api.do(call.data["action"], **extra))
 
     hass.services.async_register(DOMAIN, SERVICE_SAY, say, schema=SCHEMA_SAY)
     hass.services.async_register(DOMAIN, SERVICE_WATER, water, schema=SCHEMA_WATER)

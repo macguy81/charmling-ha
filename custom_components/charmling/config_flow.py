@@ -184,6 +184,8 @@ class CharmlingConfigFlow(ConfigFlow, domain=DOMAIN):
         # a re-pair keeps the webhook it already has; the Mac just learns the URL again
         webhook_id = existing.data[CONF_WEBHOOK_ID] if existing else webhook.async_generate_id()
         webhook_url = _webhook_url(self.hass, webhook_id)
+        if not webhook_url.startswith("http"):
+            return "no_url"
         api = CharmlingApi(async_get_clientsession(self.hass), self._host or "", self._port)
         # when we know which Mac we mean (discovered, or re-pairing), say so: a
         # different Mac at that address refuses and changes nothing
@@ -238,4 +240,4 @@ def _webhook_url(hass: HomeAssistant, webhook_id: str) -> str:
         if api is not None:
             scheme = "https" if api.use_ssl else "http"
             return f"{scheme}://{api.local_ip}:{api.port}/api/webhook/{webhook_id}"
-        return f"/api/webhook/{webhook_id}"
+        return ""

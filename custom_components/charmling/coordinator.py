@@ -19,7 +19,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.util import dt as dt_util
 
 from .api import CharmlingApi, CharmlingAuthError, CharmlingError
-from .const import DOMAIN, SIGNAL_UPDATE, STALE_AFTER
+from .const import CONF_VERSION, DOMAIN, SIGNAL_UPDATE, STALE_AFTER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,10 +63,22 @@ class CharmlingData:
         else:
             states = data.get("states")
             if isinstance(states, dict):
-                self.apply(states)
-            self.version = str(data.get("version") or self.version)
+                # a push may have landed while /state was in flight; it is newer than the snapshot
+                for key, value in states.items():
+                    self.states.setdefault(key, value)
+            self.set_version(str(data.get("version") or ""))
             self.mark_seen()
         self._unsub_timer = async_track_time_interval(self.hass, self._check_stale, timedelta(seconds=30))
+
+    @callback
+    def set_version(self, version: str) -> None:
+        """The app's version, on the device page and in the entry, whenever it changes."""
+        if not version or version == self.version:
+            return
+        self.version = version
+        self.hass.config_entries.async_update_entry(self.entry, data={**self.entry.data, CONF_VERSION: version})
+        if device_id := self.device_id:
+            dr.async_get(self.hass).async_update_device(device_id, sw_version=version)
 
     @callback
     def async_stop(self) -> None:

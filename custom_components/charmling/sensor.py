@@ -67,9 +67,13 @@ class CharmlingSensor(CharmlingEntity, SensorEntity):
             return s if s in (self.entity_description.options or []) else None
         if self.entity_description.native_unit_of_measurement or self.entity_description.state_class:
             try:
-                return int(v) if float(v).is_integer() else float(v)
+                n = int(v) if float(v).is_integer() else float(v)
             except (TypeError, ValueError):
                 return None
+            # the Mac says -1 for "no meeting in the next 8 h, or no calendar access": that is unknown, not a number
+            if key == "next_meeting_minutes" and n < 0:
+                return None
+            return n
         return str(v)
 
     @property

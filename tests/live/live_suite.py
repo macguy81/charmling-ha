@@ -1,5 +1,12 @@
 """Adversarial run against the live HA: malformed input, two Macs, reauth, reconfigure, reload cycles."""
-import asyncio, json, time, requests, websockets, subprocess
+import asyncio
+import json
+import subprocess
+import time
+
+import requests
+import websockets
+
 H = __import__("os").environ.get("HA_URL", "http://127.0.0.1:8123")
 tok = __import__("os").environ["HA_TOKEN"]
 s = requests.Session(); s.headers["Authorization"] = "Bearer " + tok
@@ -68,7 +75,7 @@ mock(M1, push={"work_kind": "hacking", "meeting_density": "HEAVY", "beads": "man
 check("invalid enum -> unknown", st(f"sensor.{P1}_work_kind") == "unknown", st(f"sensor.{P1}_work_kind"))
 check("enum case folded", st(f"sensor.{P1}_meeting_density") == "heavy", st(f"sensor.{P1}_meeting_density"))
 check("non-numeric number -> unknown", st(f"sensor.{P1}_beads_waiting") == "unknown", st(f"sensor.{P1}_beads_waiting"))
-check("negative sentinel kept", st(f"sensor.{P1}_next_meeting_in") == "-1", st(f"sensor.{P1}_next_meeting_in"))
+check("-1 (no meeting) reads unknown", st(f"sensor.{P1}_next_meeting_in") == "unknown", st(f"sensor.{P1}_next_meeting_in"))
 check("12.0 shown as 12", st(f"sensor.{P1}_focus_remaining") == "12", st(f"sensor.{P1}_focus_remaining"))
 mock(M1, push={"work_kind": "coding", "beads": 2})
 
