@@ -5,8 +5,8 @@ rules:
     status: exempt
     comment: Nothing is polled; the Mac pushes.
   brands:
-    status: todo
-    comment: Brand images to be submitted to home-assistant/brands.
+    status: done
+    comment: Shipped in the integration's brand/ folder (Home Assistant 2026.3+).
   common-modules: done
   config-flow-test-coverage: done
   config-flow: done

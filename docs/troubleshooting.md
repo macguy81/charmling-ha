@@ -122,6 +122,13 @@ Then Settings → System → Logs. Diagnostics (device page → ⋮ → Download
 diagnostics) has the last states and the last event, with the secret
 redacted; attach it to an issue.
 
+## The integration shows a generic icon
+
+Brand images ship inside the integration (`custom_components/charmling/brand/`)
+and are served by Home Assistant 2026.3 and later. On an older Home
+Assistant the placeholder icon is all there is; the brands repository no
+longer accepts images for custom integrations.
+
 ## Reporting a bug
 
 https://github.com/macguy81/charmling-ha/issues, with the diagnostics

@@ -1,4 +1,4 @@
-<p align="center"><img src="brands/custom_integrations/charmling/logo@2x.png" alt="Charmling" height="128"></p>
+<p align="center"><img src="custom_components/charmling/brand/logo@2x.png" alt="Charmling" height="128"></p>
 
 # Charmling for Home Assistant
 

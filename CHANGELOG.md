@@ -21,3 +21,4 @@ The first release.
 - The address field takes what people paste (`http://…:41417/`, `host:port`, an IPv6 literal)
 - A Docker-internal webhook address is corrected to the one the pairing came from
 - The device follows the Mac's name; strict typing (mypy) clean
+- Brand images shipped in the integration's own `brand/` folder (Home Assistant 2026.3+)
